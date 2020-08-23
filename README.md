@@ -1,8 +1,8 @@
-# Companies house api call for 'broker' information.
+# companies house api call for 'broker' information.
 
 > broker.py
 ```
-  script calls the Companies House API for information on up to 200 companies using the search term 'broker'. The response is then piped into a mysql database using two related tables - address and company - also provisioned by the script.
+  This script calls the Companies House API for information on up to 200 companies using the search term 'broker'. The response is then piped into a mysql database using two related tables - address and company - also provisioned by the script.
 ```
 > test.py
 ```
