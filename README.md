@@ -15,7 +15,7 @@ Repro steps:
   ```
   $ mkdir companies_house
   $ cd companies_house
-  $ git clone https://github.com/ChrisOkeke/companiesHouse_data.git
+  $ git clone https://github.com/ChrisOkeke/companiesHouse.git
   ```
 * Refactor credentials_sample.py to credentials.py, and
 * Update the api key and database credentials
