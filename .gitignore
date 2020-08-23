@@ -1,0 +1,10 @@
+# created by virtualenv automatically
+credentials.py
+credentials.pyc
+node_modules/
+bin/
+lib/
+__pycache__
+blist_init/
+package-lock.json
+.env sample
