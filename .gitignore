@@ -8,3 +8,4 @@ __pycache__
 blist_init/
 package-lock.json
 .env sample
+pyvenv.cfg
