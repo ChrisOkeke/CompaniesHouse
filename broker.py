@@ -8,9 +8,9 @@ Usage:
 '''
 import credentials
 import requests as r
-import pandas as pd, numpy as np, json, re, os
-import mysql.connector 
+import mysql.connector
 from mysql.connector import Error
+import pandas as pd, numpy as np, json
 
 
 def get_broker_data():
@@ -55,14 +55,12 @@ def get_broker_data():
                                         columns=['broker_title', \
                                         'broker_number', 'broker_address'])
         company_list_df['broker_title'] = company_list_df['broker_title'].str.title()
-        print('returned dataframe_dim:', company_list_df.shape)
-        print()
         sort_list = ['address_line_1', 'address_line_2', 'premises', 'locality', 'postal_code', 'region', 'country', 'po_box', 'care_of_name']
         company_title_num_address_df = pd.concat([company_list_df.iloc[:,:2], pd.json_normalize(company_list_df['broker_address']).reindex(columns=sort_list)], axis=0, sort=False)
         company_title_num_address_df = company_title_num_address_df.apply(lambda x: pd.Series(x.dropna().values))
         company_title_num_address_df.columns.values
         company_title_num_address_df = company_title_num_address_df.replace({np.nan: 'Null'})
-        print('clean_dim:', company_title_num_address_df.shape)
+        print('response_data_dim:', company_title_num_address_df.shape)
         print()
         return company_title_num_address_df
 get_broker_data()
@@ -111,6 +109,7 @@ def create_tables():
                                 ON DELETE CASCADE)')
         mycursor.execute('CREATE UNIQUE INDEX uniq_idx ON address(company_id)')
         print('Success: tables created.')
+        print()
     except Exception as e:
         print(e)
         print()
@@ -134,13 +133,9 @@ def insert_data():
                                             database = 'companiesHouse',
                                             user = credentials.mysql_user,
                                             password = credentials.mysql_pw)
-        if mysql_conn.is_connected():
-            db_info = mysql_conn.get_server_info()
-            print('Connected to mysql', db_info)
-            print()
-            mycursor = mysql_conn.cursor(buffered=True)
-            ch_db = 'CREATE DATABASE IF NOT EXISTS companiesHouse'
-            mycursor.execute(ch_db)
+        mycursor = mysql_conn.cursor(buffered=True)
+        ch_db = 'CREATE DATABASE IF NOT EXISTS companiesHouse'
+        mycursor.execute(ch_db)
         sql = 'INSERT INTO company_title_num_address VALUES(%s ,%s ,%s ,%s ,%s ,%s ,%s ,%s, %s, %s, %s)'
         for data, row in get_broker_data().iterrows():
             mycursor.execute(sql, tuple(row))
@@ -164,7 +159,7 @@ def insert_data():
             mycursor.execute(sql, row)
             mysql_conn.commit()
         mycursor.execute('DROP TABLE IF EXISTS company_title_num_address')
-        print('Success: broker data loaded.')
+        print('Success: data load complete.')
         print()
     except Exception as e:
         print(e)
